@@ -22,6 +22,9 @@ public class CreateUserRequestModel {
     @Email
     private String email;
 
+    public CreateUserRequestModel() {
+    }
+
     public String getFirstName() {
         return firstName;
     }
