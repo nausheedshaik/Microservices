@@ -75,14 +75,14 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 		byte[] secretKeyBytes = Base64.getEncoder().encode(tokenSecret.getBytes());
 		SecretKey signingKey = new SecretKeySpec(secretKeyBytes, SignatureAlgorithm.HS512.getJcaName());
 
-		JwtParser jwtParser = Jwts.parserBuilder()
+		JwtParser jwtParser = Jwts.parser()
 				.setSigningKey(signingKey)
 				.build();
 
 		try {
-
-			Jwt<Header, Claims> parsedToken = jwtParser.parse(jwt);
-			subject = parsedToken.getBody().getSubject();
+			// Use parseClaimsJws to parse a signed JWT token
+			Claims claims = jwtParser.parseClaimsJws(jwt.trim()).getBody();
+			subject = claims.getSubject();
 
 		} catch (Exception ex) {
 			returnValue = false;
@@ -92,7 +92,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 			returnValue = false;
 		}
 
-		return returnValue;
+  		return returnValue;
 	}
 
 }
